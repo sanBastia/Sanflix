@@ -1,10 +1,12 @@
 import React from 'react';
-import App from '../modules/Home';
+import MovieList from '../modules/MovieList';
+import Navigation from '../modules/Navigation';
 
 const Home = () => (
-  <React.Fragment>
-    <App />
-  </React.Fragment>
+  <div>
+    <Navigation />
+    <MovieList />
+  </div>
 );
 
 export default Home;
