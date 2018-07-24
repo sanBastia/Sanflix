@@ -1,9 +1,9 @@
 import React from 'react';
 import MovieList from '../modules/MovieList';
 
-const Home = () => (
+const Home = props => (
   <div>
-    <MovieList />
+    <MovieList {...props} />
   </div>
 );
 

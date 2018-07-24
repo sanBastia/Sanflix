@@ -1,10 +1,9 @@
 import React from 'react';
-
 import MovieDetail from '../modules/MovieDetail';
 
-const Detail = () => (
+const Detail = props => (
   <div>
-    <MovieDetail />
+    <MovieDetail {...props} />
   </div>
 );
 
