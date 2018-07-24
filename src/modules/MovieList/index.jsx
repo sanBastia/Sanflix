@@ -20,8 +20,12 @@ class MovieList extends React.Component {
   static propTypes = {
     nowPlayingReducer: PropTypes.object.isRequired,
     requestNowPlaying: PropTypes.func.isRequired,
-    activeRequests: PropTypes.number.isRequired,
+    activeRequests: PropTypes.number,
   }
+
+  static defaultProps = {
+    activeRequests: 0,
+  };
 
   state = {
     activeTab: '1',
@@ -49,10 +53,20 @@ class MovieList extends React.Component {
     ) : overview
   )
 
+  handleLinkToMovieDetail = (movie) => {
+    const { id, title } = movie;
+    const tempTitle = title.split(' ').length;
+    if (tempTitle > 1) {
+      const res = `${id}-${title.split(' ').join('-')}`;
+      return res;
+    }
+    return `${id}-${title}`;
+  }
+
   renderNowPlaying = () => {
-    const { nowPlayingReducer: { data: { results } }, activeRequests } = this.props;
-    const { handleOverview } = this;
-    if (results) {
+    const { nowPlayingReducer: { data: { results }, activeRequests } } = this.props;
+    const { handleOverview, handleLinkToMovieDetail } = this;
+    if (results && activeRequests === 0) {
       return (
         <Row>
           {results.map(item => (
@@ -64,14 +78,14 @@ class MovieList extends React.Component {
                     {item.title}
                   </CardTitle>
                   <CardSubtitle>
-                    Synopsis
+                      Synopsis
                   </CardSubtitle>
                   <CardText>
                     { handleOverview(item.overview) }
                   </CardText>
                   <Button color="success">
-                    <Link to="/movie">
-                     Take a look !
+                    <Link to={handleLinkToMovieDetail(item)}>
+                       Take a look !
                     </Link>
                   </Button>
                 </CardBody>
@@ -152,9 +166,5 @@ class MovieList extends React.Component {
 const mapStateToProps = ({ nowPlayingReducer }) => ({
   nowPlayingReducer,
 });
-
-MovieList.propTypes = {
-  requestNowPlaying: PropTypes.func.isRequired,
-};
 
 export default connect(mapStateToProps, { requestNowPlaying })(MovieList);

@@ -1,6 +1,6 @@
 import CONSTANT from './constant';
 import call from './api';
-import { SuccessOrError } from './utils';
+import { SuccessOrError } from './util';
 
 const successRequestNowPlaying = data => ({
   type: CONSTANT.REQUEST_NOW_PLAYING_SUCCESS,
