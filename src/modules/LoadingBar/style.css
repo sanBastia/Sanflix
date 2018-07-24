@@ -1,3 +1,5 @@
 .simple__loading__container{
-  position: inherit;
+  position: fixed; /* or absolute */
+  top: 50%;
+  left: 1%;
 }

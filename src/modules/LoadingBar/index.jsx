@@ -4,19 +4,17 @@ import SimpleLoadingBar from 'react-simple-loading-bar';
 
 import './style.css';
 
-const LoadingBar = props => (
-  <div className="LoadingBar">
-    <SimpleLoadingBar activeRequests={props.progress} color=" #28a745" />
-    <br />
-    <span>
-       Loading
-    </span>
-  </div>
-
-);
+const LoadingBar = (props) => {
+  const { progress } = props;
+  return (
+    <React.Fragment>
+      <SimpleLoadingBar activeRequests={progress} color="#28a745" />
+    </React.Fragment>
+  );
+};
 
 LoadingBar.defaultProps = {
-  progress: null,
+  progress: 0,
 };
 
 LoadingBar.propTypes = {
