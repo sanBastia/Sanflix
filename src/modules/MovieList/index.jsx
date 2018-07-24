@@ -1,12 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   TabContent, TabPane, Nav, NavItem, NavLink, Card, Button,
-  CardTitle, CardText, Row, Col, CardImg, CardBody, CardSubtitle,
+  CardTitle, CardText, Row, Col, CardImg, CardBody, Badge,
+  CardSubtitle,
 } from 'reactstrap';
 import classnames from 'classnames';
 import requestNowPlaying from './action';
+import './style.css';
+
+import LoadingBar from '../LoadingBar';
 
 
 // eslint-disable-next-line
@@ -15,6 +20,7 @@ class MovieList extends React.Component {
   static propTypes = {
     nowPlayingReducer: PropTypes.object.isRequired,
     requestNowPlaying: PropTypes.func.isRequired,
+    activeRequests: PropTypes.number.isRequired,
   }
 
   state = {
@@ -35,27 +41,38 @@ class MovieList extends React.Component {
     }
   }
 
+  handleOverview = overview => (
+    overview === 'Add the plot.' ? (
+      <Badge color="info">
+              Coming soon
+      </Badge>
+    ) : overview
+  )
+
   renderNowPlaying = () => {
-    const { nowPlayingReducer: { data: { results } } } = this.props;
+    const { nowPlayingReducer: { data: { results } }, activeRequests } = this.props;
+    const { handleOverview } = this;
     if (results) {
       return (
         <Row>
           {results.map(item => (
             <Col key={item.id} md="3">
-              <Card>
+              <Card className="nowPlayingCard">
                 <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt="Card image cap" />
                 <CardBody>
                   <CardTitle>
                     {item.title}
                   </CardTitle>
                   <CardSubtitle>
-                  Overview
+                    Synopsis
                   </CardSubtitle>
                   <CardText>
-                    {item.overview}
+                    { handleOverview(item.overview) }
                   </CardText>
-                  <Button>
-                   Button
+                  <Button color="success">
+                    <Link to="/movie">
+                     Take a look !
+                    </Link>
                   </Button>
                 </CardBody>
               </Card>
@@ -66,7 +83,7 @@ class MovieList extends React.Component {
       );
     }
 
-    return 'loading';
+    return <LoadingBar progress={activeRequests} />;
   }
 
   render() {
@@ -93,7 +110,7 @@ class MovieList extends React.Component {
           </NavItem>
         </Nav>
         <TabContent activeTab={activeTab}>
-          <TabPane tabId="1">
+          <TabPane tabId="1" className="nowPlayingTab">
             {renderNowPlaying()}
           </TabPane>
           <TabPane tabId="2">
