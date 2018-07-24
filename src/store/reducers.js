@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import homeReducer from '../modules/Home/reducer';
+import nowPlayingReducer from '../modules/MovieList/reducer';
 
 const rootReducer = combineReducers({
-  homeReducer,
+  nowPlayingReducer,
 });
 
 export default rootReducer;
