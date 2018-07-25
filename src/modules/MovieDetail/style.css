@@ -1,0 +1,5 @@
+.horizontalScrollingcast{
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  padding: 1.5em;
+}
