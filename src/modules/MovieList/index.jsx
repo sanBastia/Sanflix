@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+
 import {
   TabContent, TabPane, Nav, NavItem, NavLink, Card, Button,
   CardTitle, CardText, Row, Col, CardImg, CardBody, Badge,
@@ -24,10 +25,16 @@ class MovieList extends React.Component {
 
   state = {
     activeTab: '1',
+    show: false,
   }
 
   componentDidMount = () => {
     const { requestNowPlaying } = this.props;
+    setTimeout(() => {
+      this.setState({
+        show: true,
+      });
+    }, 5000);
     requestNowPlaying();
   }
 
@@ -96,7 +103,7 @@ class MovieList extends React.Component {
   }
 
   render() {
-    const { activeTab } = this.state;
+    const { activeTab, show } = this.state;
     const { toggle, renderNowPlaying } = this;
     return (
       <div>
