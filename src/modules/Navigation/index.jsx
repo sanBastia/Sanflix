@@ -7,16 +7,20 @@ import {
   Nav,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
 } from 'reactstrap';
-
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { FaMoney } from 'react-icons/lib/fa/';
 
+import './style.css';
 
-export default class Navigation extends React.Component {
+
+class Navigation extends React.Component {
+  static propTypes = {
+    balanceReducer: PropTypes.object.isRequired,
+  }
+
   state = {
     isOpen: false,
   }
@@ -31,24 +35,32 @@ export default class Navigation extends React.Component {
   render() {
     const { isOpen } = this.state;
     const { toggle } = this;
+    const { balanceReducer: { balance } } = this.props;
     return (
       <div>
         <Navbar color="success" light expand="md">
-          <NavbarBrand href="/">
+          <NavbarBrand>
+            <Link className="brand" to="/">
               TokoFlix
+            </Link>
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem color="white">
-                <NavLink href="/components/">
-                  <FaMoney size={20} />
-                    RP. 100.000
+              <NavItem>
+                <NavLink>
+                  <FaMoney color="white" size={20} />
+                  <span className="balance">
+                    RP.
+                    {balance}
+                  </span>
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">
-                    GitHub
+                <NavLink href="https://github.com/sanBastia/Tokoflix">
+                  <span className="github">
+                      GitHub
+                  </span>
                 </NavLink>
               </NavItem>
             </Nav>
@@ -58,3 +70,9 @@ export default class Navigation extends React.Component {
     );
   }
 }
+
+const mapStateToProps = ({ balanceReducer }) => ({
+  balanceReducer,
+});
+
+export default connect(mapStateToProps, null)(Navigation);
