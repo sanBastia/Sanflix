@@ -7,11 +7,16 @@ const RequestEarlyBalance = () => ({
 
 const RequestBonusBalance = () => ({
   type: CONSTANT.REQUEST_BONUS_BALANCE,
+});
 
+const RequestPurchase = price => ({
+  type: CONSTANT.REQUEST_PURCHASE,
+  payload: price,
 });
 
 
 export {
   RequestEarlyBalance,
   RequestBonusBalance,
+  RequestPurchase,
 };
