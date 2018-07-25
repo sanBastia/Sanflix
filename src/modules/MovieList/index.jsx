@@ -32,6 +32,24 @@ class MovieList extends React.Component {
     requestNowPlaying();
   }
 
+  setDataFromStorage = () => {
+    const { nowPlayingReducer: { data: { results } } } = this.props;
+    const storage = window.localStorage;
+    storage.setItem('result', JSON.stringify(results));
+  }
+
+  getDataFromStorage = () => {
+    const { waitingFromStorage } = this;
+    const storage = window.localStorage;
+    const temp = storage.getItem('result');
+    if (waitingFromStorage(temp)) {
+      return JSON.parse(temp);
+    }
+    return '';
+  }
+
+  waitingFromStorage = data => data !== 'undefined'
+
   toggle = (tab) => {
     const { activeTab } = this.state;
     if (activeTab !== tab) {
@@ -58,24 +76,6 @@ class MovieList extends React.Component {
     }
     return `${id}-${title}`;
   }
-
-  setDataFromStorage = () => {
-    const { nowPlayingReducer: { data: { results } } } = this.props;
-    const storage = window.localStorage;
-    storage.setItem('result', JSON.stringify(results));
-  }
-
-  getDataFromStorage = () => {
-    const { waitingFromStorage } = this;
-    const storage = window.localStorage;
-    const temp = storage.getItem('result');
-    if (waitingFromStorage(temp)) {
-      return JSON.parse(temp);
-    }
-    return '';
-  }
-
-  waitingFromStorage = data => data !== 'undefined'
 
   renderNowPlaying = () => {
     const { nowPlayingReducer: { data: { results }, activeRequests } } = this.props;

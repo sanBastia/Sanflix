@@ -14,6 +14,7 @@ import LoadingBar from '../LoadingBar';
 import person from '../../common/Images/profile.png';
 import movie from '../../common/Images/Movie.jpg';
 import { GetPrices } from './util';
+import Alert from '../Alert';
 
 class MovieDetail extends Component {
   static propTypes = {
@@ -24,6 +25,10 @@ class MovieDetail extends Component {
     movieCastReducer: PropTypes.object.isRequired,
   };
 
+  state = {
+    openAlert: false,
+  }
+
   componentDidMount() {
     const { requestMovieDetail, requestMovieCast, location } = this.props;
 
@@ -33,13 +38,12 @@ class MovieDetail extends Component {
     requestMovieCast(movieId);
   }
 
-  renderOverview = overview => (
-    overview === 'Add the plot.' ? (
-      <Badge color="info">
-              Coming soon
-      </Badge>
-    ) : overview
-  )
+  handleOpenAlert = () => {
+    this.setState({
+      openAlert: true,
+    });
+  }
+
 
   renderTagline = (tagline) => {
     if (tagline === '') {
@@ -107,19 +111,30 @@ class MovieDetail extends Component {
     </div>
   )
 
+  renderOverview = overview => (
+    overview === 'Add the plot.' ? (
+      <Badge color="info">
+              Coming soon
+      </Badge>
+    ) : overview
+  )
+
   renderPurchaseButton = rate => (
-    <Button className="miniInfo" color="success" size="lg" block disabled={rate === 0}>
+    <Button className="miniInfo" color="success" size="lg" block disabled={rate === 0} onClick={() => this.handleOpenAlert()}>
       {rate === 0 ? 'Coming Soon' : 'PURCHASE'}
     </Button>
   )
 
 
   render() {
+    const { openAlert } = this.state;
     const { movieDetailReducer: { data, activeRequests } } = this.props;
     const {
       renderOverview, renderCast, renderTagline,
       renderRating, renderPrice, renderPurchaseButton,
     } = this;
+
+    const price = GetPrices(data.vote_average);
 
     if (data && activeRequests === 0) {
       return (
@@ -149,7 +164,7 @@ class MovieDetail extends Component {
               </Col>
               <Col md="6">
                 <Card>
-                  <CardImg top width="100%" src={data.backdrop_path === null ? movie : `https://image.tmdb.org/t/p/w500/${data.backdrop_path}`} alt="Card image cap" />
+                  <CardImg top width="100%" src={data.backdrop_path === null || data.backdrop_path === 'np' ? movie : `https://image.tmdb.org/t/p/w500/${data.backdrop_path}`} alt="Card image cap" />
                 </Card>
               </Col>
             </Row>
@@ -166,6 +181,7 @@ class MovieDetail extends Component {
             </h5>
             {renderCast()}
           </Jumbotron>
+          <Alert show={openAlert} purchase={openAlert} title={data.title} price={price} />
         </div>
       );
     }
