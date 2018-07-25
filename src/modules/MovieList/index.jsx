@@ -21,6 +21,7 @@ class MovieList extends React.Component {
   static propTypes = {
     nowPlayingReducer: PropTypes.object.isRequired,
     requestNowPlaying: PropTypes.func.isRequired,
+    activeRequests: PropTypes.number.isRequired,
   }
 
   state = {
@@ -78,7 +79,7 @@ class MovieList extends React.Component {
   }
 
   renderNowPlaying = () => {
-    const { nowPlayingReducer: { data: { results }, activeRequests } } = this.props;
+    const { activeRequests } = this.props;
     const {
       setDataFromStorage, getDataFromStorage,
       handleOverview, handleLinkToMovieDetail,
