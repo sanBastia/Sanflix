@@ -127,7 +127,16 @@ class MovieDetail extends Component {
   renderSimilar = () => {
     const { similarMovieReducer: { data: { results } } } = this.props;
     const { handleLinkToMovieDetail } = this;
+
+ 
     if (results) {
+      if (results.length === 0) {
+        return (
+          <Badge color="info">
+                Coming soon
+          </Badge>
+        );
+      }
       return (
         <Row className="horizontalScrollingcast">
           { results.map(item => (
