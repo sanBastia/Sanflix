@@ -38,13 +38,18 @@ class Alert extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { purchase } = this.props;
+    const { handleOpen } = this;
     if (prevProps.purchase !== purchase) {
-      this.setState({
-        show: true,
-        purchase: true,
-      });
+      return handleOpen();
     }
     return null;
+  }
+
+  handleOpen = () => {
+    this.setState({
+      show: true,
+      purchase: true,
+    });
   }
 
   handleBonusBalance = () => {
