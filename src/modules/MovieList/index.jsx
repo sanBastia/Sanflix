@@ -46,7 +46,6 @@ class MovieList extends React.Component {
     if (waitingFromStorage(temp)) {
       return JSON.parse(temp);
     }
-    return '';
   }
 
   waitingFromStorage = data => data !== 'undefined'
@@ -79,7 +78,8 @@ class MovieList extends React.Component {
   }
 
   renderNowPlaying = () => {
-    const { activeRequests } = this.props;
+    const { nowPlayingReducer: { activeRequests } } = this.props;
+
     const {
       setDataFromStorage, getDataFromStorage,
       handleOverview, handleLinkToMovieDetail,
