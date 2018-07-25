@@ -1,7 +1,7 @@
 import CONSTANT from './constant';
 import { PickOnlyDataAndStatus } from './util';
 
-const initialState = {
+const initialMovieDetailState = {
   data: {},
   status: '',
 
@@ -9,7 +9,7 @@ const initialState = {
   activeRequests: 0,
 };
 
-const movieDetailReducer = (state = initialState, action) => {
+const movieDetailReducer = (state = initialMovieDetailState, action) => {
   switch (action.type) {
     case CONSTANT.REQUEST_MOVIE_DETAIL: {
       return Object.assign({}, state, { activeRequests: state.activeRequests + 1 });
@@ -27,4 +27,31 @@ const movieDetailReducer = (state = initialState, action) => {
   }
 };
 
-export default movieDetailReducer;
+
+const initialMovieCastState = {
+  data: {},
+  status: '',
+
+};
+
+const movieCastReducer = (state = initialMovieCastState, action) => {
+  switch (action.type) {
+    case CONSTANT.REQUEST_MOVIE_CAST: {
+      return Object.assign({}, state);
+    }
+    case CONSTANT.REQUEST_MOVIE_CAST_SUCCESS: {
+      return Object.assign({}, state, PickOnlyDataAndStatus(action.payload));
+    }
+    case CONSTANT.REQUEST_MOVIE_CAST_ERROR: {
+      return Object.assign({}, state, PickOnlyDataAndStatus(action.payload));
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
+export {
+  movieCastReducer,
+  movieDetailReducer,
+};

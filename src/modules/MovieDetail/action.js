@@ -14,11 +14,32 @@ const errorRequestMovieDetail = err => ({
 
 const requestMovieDetail = movieId => async (dispatch) => {
   dispatch({ type: CONSTANT.REQUEST_MOVIE_DETAIL });
-  
+
   const response = await call.getMovieDetail(movieId);
 
   return SuccessOrError(response.status) ? dispatch(successRequestMovieDetail(response)) : dispatch(errorRequestMovieDetail(response));
 };
 
+const successRequestMovieCast = data => ({
+  type: CONSTANT.REQUEST_MOVIE_CAST_SUCCESS,
+  payload: data,
+});
 
-export default requestMovieDetail;
+const errorRequestMovieCast = err => ({
+  type: CONSTANT.REQUEST_MOVIE_CAST_ERROR,
+  payload: err,
+});
+
+const requestMovieCast = movieId => async (dispatch) => {
+  dispatch({ type: CONSTANT.REQUEST_MOVIE_CAST });
+
+  const response = await call.getMovieCast(movieId);
+
+  return SuccessOrError(response.status) ? dispatch(successRequestMovieCast(response)) : dispatch(errorRequestMovieCast(response));
+};
+
+
+export {
+  requestMovieDetail,
+  requestMovieCast,
+};
