@@ -20,12 +20,7 @@ class MovieList extends React.Component {
   static propTypes = {
     nowPlayingReducer: PropTypes.object.isRequired,
     requestNowPlaying: PropTypes.func.isRequired,
-    activeRequests: PropTypes.number,
   }
-
-  static defaultProps = {
-    activeRequests: 0,
-  };
 
   state = {
     activeTab: '1',
@@ -33,7 +28,7 @@ class MovieList extends React.Component {
 
   componentDidMount = () => {
     const { requestNowPlaying } = this.props;
-    return requestNowPlaying();
+    requestNowPlaying();
   }
 
   toggle = (tab) => {
