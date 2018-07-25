@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {
   TabContent, TabPane, Nav, NavItem, NavLink, Card, Button,
   CardTitle, CardText, Row, Col, CardImg, CardBody, Badge,
-  CardSubtitle,
+  CardSubtitle, Jumbotron, Container,
 } from 'reactstrap';
 import classnames from 'classnames';
 import requestNowPlaying from './action';
@@ -149,34 +149,16 @@ class MovieList extends React.Component {
             {renderNowPlaying()}
           </TabPane>
           <TabPane tabId="2">
-            <Row>
-              <Col sm="6">
-                <Card body>
-                  <CardTitle>
-          Special Title Treatment
-                  </CardTitle>
-                  <CardText>
-        With supporting text below as a natural lead-in to additional content.
-                  </CardText>
-                  <Button>
-        Go somewhere
-                  </Button>
-                </Card>
-              </Col>
-              <Col sm="6">
-                <Card body>
-                  <CardTitle>
-        Special Title Treatment
-                  </CardTitle>
-                  <CardText>
-              With supporting text below as a natural lead-in to additional content.
-                  </CardText>
-                  <Button>
-            Go somewhere
-                  </Button>
-                </Card>
-              </Col>
-            </Row>
+            <Jumbotron fluid>
+              <Container fluid>
+                <h1 className="display-3">
+            Coming Soon !
+                </h1>
+                <p className="lead">
+              Dont worry, our Engineer now is workin on that !
+                </p>
+              </Container>
+            </Jumbotron>
           </TabPane>
         </TabContent>
       </div>
