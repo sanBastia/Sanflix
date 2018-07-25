@@ -13,6 +13,8 @@ import {
   DropdownItem,
 } from 'reactstrap';
 
+import { FaMoney } from 'react-icons/lib/fa/';
+
 
 export default class Navigation extends React.Component {
   state = {
@@ -31,16 +33,17 @@ export default class Navigation extends React.Component {
     const { toggle } = this;
     return (
       <div>
-        <Navbar color="light" light expand="md">
+        <Navbar color="success" light expand="md">
           <NavbarBrand href="/">
               TokoFlix
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem>
+              <NavItem color="white">
                 <NavLink href="/components/">
-                    Components
+                  <FaMoney size={20} />
+                    RP. 100.000
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -48,23 +51,6 @@ export default class Navigation extends React.Component {
                     GitHub
                 </NavLink>
               </NavItem>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Options
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>
-                    Option 1
-                  </DropdownItem>
-                  <DropdownItem>
-                    Option 2
-                  </DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem>
-                    Reset
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
             </Nav>
           </Collapse>
         </Navbar>
