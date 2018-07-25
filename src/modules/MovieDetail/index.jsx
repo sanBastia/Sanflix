@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Jumbotron, Badge, Row, Col, Card, CardImg, CardBody,
-  CardTitle, CardSubtitle, Button,
+  CardTitle, CardSubtitle, Button, Container,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -128,7 +128,7 @@ class MovieDetail extends Component {
     const { similarMovieReducer: { data: { results } } } = this.props;
     const { handleLinkToMovieDetail } = this;
 
- 
+
     if (results) {
       if (results.length === 0) {
         return (
@@ -199,16 +199,38 @@ class MovieDetail extends Component {
 
   render() {
     const { openAlert } = this.state;
-    const { movieDetailReducer: { data, activeRequests } } = this.props;
+    const { movieDetailReducer: { data, activeRequests, status } } = this.props;
     const {
       renderOverview, renderCast, renderTagline,
       renderRating, renderPrice, renderPurchaseButton,
       renderSimilar,
     } = this;
 
-    const price = GetPrices(data.vote_average);
+    if (status === 'error') {
+      return (
+        <Jumbotron fluid>
+          <Container fluid>
+            <h1 className="display-3">
+             Sorry, not Found
+            </h1>
+            <p className="lead">
+              Dont worry our Engineer will handle this,
+              maybe Back to
+              {' '}
+              <Link to="/">
+                Home
+              </Link>
+              {' '}
+              ?
+            </p>
+          </Container>
+        </Jumbotron>
+      );
+    }
+
 
     if (data && activeRequests === 0) {
+      const price = GetPrices(data.vote_average);
       return (
         <div>
           <Jumbotron className="jumbo">
