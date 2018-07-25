@@ -25,16 +25,10 @@ class MovieList extends React.Component {
 
   state = {
     activeTab: '1',
-    show: false,
   }
 
   componentDidMount = () => {
     const { requestNowPlaying } = this.props;
-    setTimeout(() => {
-      this.setState({
-        show: true,
-      });
-    }, 5000);
     requestNowPlaying();
   }
 
@@ -65,13 +59,38 @@ class MovieList extends React.Component {
     return `${id}-${title}`;
   }
 
+  setDataFromStorage = () => {
+    const { nowPlayingReducer: { data: { results } } } = this.props;
+    const storage = window.localStorage;
+    storage.setItem('result', JSON.stringify(results));
+  }
+
+  getDataFromStorage = () => {
+    const { waitingFromStorage } = this;
+    const storage = window.localStorage;
+    const temp = storage.getItem('result');
+    if (waitingFromStorage(temp)) {
+      return JSON.parse(temp);
+    }
+    return '';
+  }
+
+  waitingFromStorage = data => data !== 'undefined'
+
   renderNowPlaying = () => {
     const { nowPlayingReducer: { data: { results }, activeRequests } } = this.props;
-    const { handleOverview, handleLinkToMovieDetail } = this;
-    if (results && activeRequests === 0) {
+    const {
+      setDataFromStorage, getDataFromStorage,
+      handleOverview, handleLinkToMovieDetail,
+    } = this;
+
+    setDataFromStorage();
+    const storageResults = getDataFromStorage();
+
+    if (storageResults && activeRequests === 0) {
       return (
         <Row>
-          {results.map(item => (
+          {storageResults.map(item => (
             <Col key={item.id} md="3">
               <Card className="nowPlayingCard">
                 <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt="Card image cap" />
@@ -103,7 +122,7 @@ class MovieList extends React.Component {
   }
 
   render() {
-    const { activeTab, show } = this.state;
+    const { activeTab } = this.state;
     const { toggle, renderNowPlaying } = this;
     return (
       <div>
