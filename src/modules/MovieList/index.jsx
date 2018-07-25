@@ -21,7 +21,6 @@ class MovieList extends React.Component {
   static propTypes = {
     nowPlayingReducer: PropTypes.object.isRequired,
     requestNowPlaying: PropTypes.func.isRequired,
-    activeRequests: PropTypes.number.isRequired,
   }
 
   state = {
