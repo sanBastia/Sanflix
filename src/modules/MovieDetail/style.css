@@ -3,3 +3,12 @@
   overflow-x: scroll;
   padding: 1.5em;
 }
+
+.miniInfo{
+  margin-top: 1em;
+}
+
+.miniTag{
+  margin-left: 1em;
+  font-size: 18px;
+}
