@@ -38,8 +38,27 @@ const requestMovieCast = movieId => async (dispatch) => {
   return SuccessOrError(response.status) ? dispatch(successRequestMovieCast(response)) : dispatch(errorRequestMovieCast(response));
 };
 
+const successRequestSimilarMovie = data => ({
+  type: CONSTANT.REQUEST_SIMILAR_MOVIE_SUCCESS,
+  payload: data,
+});
+
+const errorRequestSimilarMovie = err => ({
+  type: CONSTANT.REQUEST_SIMILAR_MOVIE_ERROR,
+  payload: err,
+});
+
+const requestSimilarMovie = movieId => async (dispatch) => {
+  dispatch({ type: CONSTANT.REQUEST_SIMILAR_MOVIE });
+
+  const response = await call.getSimilarMovie(movieId);
+
+  return SuccessOrError(response.status) ? dispatch(successRequestSimilarMovie(response)) : dispatch(errorRequestSimilarMovie(response));
+};
+
 
 export {
   requestMovieDetail,
   requestMovieCast,
+  requestSimilarMovie,
 };

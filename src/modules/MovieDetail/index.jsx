@@ -4,12 +4,13 @@ import {
   Jumbotron, Badge, Row, Col, Card, CardImg, CardBody,
   CardTitle, CardSubtitle, Button,
 } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FaTag, FaMoney } from 'react-icons/lib/fa/';
 import { TiStarFullOutline } from 'react-icons/lib/ti';
 
 import './style.css';
-import { requestMovieDetail, requestMovieCast } from './action';
+import { requestMovieDetail, requestMovieCast, requestSimilarMovie } from './action';
 import LoadingBar from '../LoadingBar';
 import person from '../../common/Images/profile.png';
 import movie from '../../common/Images/Movie.jpg';
@@ -20,9 +21,11 @@ class MovieDetail extends Component {
   static propTypes = {
     requestMovieDetail: PropTypes.func.isRequired,
     requestMovieCast: PropTypes.func.isRequired,
+    requestSimilarMovie: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     movieDetailReducer: PropTypes.object.isRequired,
     movieCastReducer: PropTypes.object.isRequired,
+    similarMovieReducer: PropTypes.object.isRequired,
   };
 
   state = {
@@ -30,18 +33,72 @@ class MovieDetail extends Component {
   }
 
   componentDidMount() {
-    const { requestMovieDetail, requestMovieCast, location } = this.props;
+    const {
+      requestMovieDetail, requestMovieCast, requestSimilarMovie, location,
+    } = this.props;
 
     // remove the '/' for getting the movie id
     const movieId = location.pathname.split('-')[0].slice(1);
     requestMovieDetail(movieId);
     requestMovieCast(movieId);
+    requestSimilarMovie(movieId);
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      requestMovieDetail, requestMovieCast, requestSimilarMovie, location,
+    } = this.props;
+
+    if (location.pathname !== prevProps.location.pathname) {
+      const movieId = location.pathname.split('-')[0].slice(1);
+      requestMovieDetail(movieId);
+      requestMovieCast(movieId);
+      requestSimilarMovie(movieId);
+    }
   }
 
   handleOpenAlert = () => {
     this.setState({
       openAlert: true,
     });
+  }
+
+  handleLinkToMovieDetail = (movie) => {
+    const { id, title } = movie;
+    const tempTitle = title.split(' ').length;
+    if (tempTitle > 1) {
+      const res = `${id}-${title.split(' ').join('-')}`;
+      return res;
+    }
+    return `${id}-${title}`;
+  }
+
+
+  renderCast = () => {
+    const { movieCastReducer: { data: { cast } } } = this.props;
+    if (cast) {
+      return (
+        <Row className="horizontalScrollingcast">
+          { cast.map(item => (
+            <Col key={item.id} sm="3">
+              <Card>
+                <CardImg top width="100%" src={item.profile_path === null ? person : `https://image.tmdb.org/t/p/w500/${item.profile_path}`} alt="Card image cap" />
+                <CardBody>
+                  <CardTitle>
+                    {item.character}
+                  </CardTitle>
+                  <CardSubtitle>
+                    {item.name}
+                  </CardSubtitle>
+                </CardBody>
+              </Card>
+            </Col>
+          ))
+      }
+        </Row>
+      );
+    }
+    return 'Loading';
   }
 
 
@@ -66,22 +123,27 @@ class MovieDetail extends Component {
     );
   };
 
-  renderCast = () => {
-    const { movieCastReducer: { data: { cast } } } = this.props;
-    if (cast) {
+
+  renderSimilar = () => {
+    const { similarMovieReducer: { data: { results } } } = this.props;
+    const { handleLinkToMovieDetail } = this;
+    if (results) {
       return (
         <Row className="horizontalScrollingcast">
-          { cast.map(item => (
-            <Col key={item.id} sm="3">
-              <Card>
-                <CardImg top width="100%" src={item.profile_path === null ? person : `https://image.tmdb.org/t/p/w500/${item.profile_path}`} alt="Card image cap" />
+          { results.map(item => (
+            <Col key={item.id} md="3">
+              <Card className="nowPlayingCard">
+                <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt="Card image cap" />
                 <CardBody>
                   <CardTitle>
-                    {item.character}
+                    {item.title}
                   </CardTitle>
-                  <CardSubtitle>
-                    {item.name}
-                  </CardSubtitle>
+
+                  <Button color="success">
+                    <Link to={handleLinkToMovieDetail(item)}>
+                      Take a look !
+                    </Link>
+                  </Button>
                 </CardBody>
               </Card>
             </Col>
@@ -132,6 +194,7 @@ class MovieDetail extends Component {
     const {
       renderOverview, renderCast, renderTagline,
       renderRating, renderPrice, renderPurchaseButton,
+      renderSimilar,
     } = this;
 
     const price = GetPrices(data.vote_average);
@@ -180,6 +243,11 @@ class MovieDetail extends Component {
               Cast
             </h5>
             {renderCast()}
+            <hr className="my-2" />
+            <h5>
+              Similar
+            </h5>
+            {renderSimilar()}
           </Jumbotron>
           <Alert show={openAlert} purchase={openAlert} title={data.title} price={price} />
         </div>
@@ -190,9 +258,10 @@ class MovieDetail extends Component {
   }
 }
 
-const mapStateToProps = ({ movieDetailReducer, movieCastReducer }) => ({
+const mapStateToProps = ({ movieDetailReducer, movieCastReducer, similarMovieReducer }) => ({
   movieDetailReducer,
   movieCastReducer,
+  similarMovieReducer,
 });
 
-export default connect(mapStateToProps, { requestMovieDetail, requestMovieCast })(MovieDetail);
+export default connect(mapStateToProps, { requestMovieDetail, requestMovieCast, requestSimilarMovie })(MovieDetail);

@@ -51,7 +51,31 @@ const movieCastReducer = (state = initialMovieCastState, action) => {
   }
 };
 
+const initialSimilarMovieState = {
+  data: {},
+  status: '',
+
+};
+
+const similarMovieReducer = (state = initialSimilarMovieState, action) => {
+  switch (action.type) {
+    case CONSTANT.REQUEST_SIMILAR_MOVIE: {
+      return Object.assign({}, state);
+    }
+    case CONSTANT.REQUEST_SIMILAR_MOVIE_SUCCESS: {
+      return Object.assign({}, state, PickOnlyDataAndStatus(action.payload));
+    }
+    case CONSTANT.REQUEST_SIMILAR_MOVIE_ERROR: {
+      return Object.assign({}, state, PickOnlyDataAndStatus(action.payload));
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 export {
   movieCastReducer,
   movieDetailReducer,
+  similarMovieReducer,
 };
