@@ -27,12 +27,9 @@ class Alert extends React.Component {
 
   componentDidMount() {
     const { balanceReducer: { status } } = this.props;
+    const { handleDelayOpenAtBeginning } = this;
     if (status) {
-      setTimeout(() => {
-        this.setState({
-          show: true,
-        });
-      }, 3000);
+      handleDelayOpenAtBeginning();
     }
     return null;
   }
@@ -44,6 +41,14 @@ class Alert extends React.Component {
       return handleOpenPurchaseConfirmation();
     }
     return null;
+  }
+
+  handleDelayOpenAtBeginning = () => {
+    setTimeout(() => {
+      this.setState({
+        show: true,
+      });
+    }, 3000);
   }
 
   handleOpenPurchaseConfirmation = () => {
