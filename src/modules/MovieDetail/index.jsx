@@ -49,12 +49,21 @@ class MovieDetail extends Component {
       requestMovieDetail, requestMovieCast, requestSimilarMovie, location,
     } = this.props;
 
+    const { handleResetAlert } = this;
+
     if (location.pathname !== prevProps.location.pathname) {
       const movieId = location.pathname.split('-')[0].slice(1);
+      handleResetAlert();
       requestMovieDetail(movieId);
       requestMovieCast(movieId);
       requestSimilarMovie(movieId);
     }
+  }
+
+  handleResetAlert = () => {
+    this.setState({
+      openAlert: false,
+    });
   }
 
   handleOpenAlert = () => {
