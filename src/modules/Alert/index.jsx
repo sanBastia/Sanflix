@@ -87,6 +87,7 @@ class Alert extends React.Component {
     return (
       <SweetAlert
         show={show}
+        type="success"
         title="CONGRATULATIONS !"
         text="You just got a BONUS RP. 100.000 BALANCE !"
         onConfirm={() => handleBonusBalance()}
