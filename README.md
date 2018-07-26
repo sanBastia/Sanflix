@@ -8,8 +8,8 @@ and also big thanks for this awesome API [TMDB](https://developers.themoviedb.or
 
 
 ## Deployment
-
-right now , i'm using the HEROKU, to deploy this app, the instruction list will be coming soon...
+ 
+ I'm using the HEROKU to deploy this app. the instruction list will be coming soon...
 
 ## Authors
 
