@@ -41,7 +41,7 @@ class Navigation extends React.Component {
         <Navbar color="success" light expand="md">
           <NavbarBrand>
             <Link className="brand" to="/">
-              TokoFlix
+                TokoFlix
             </Link>
           </NavbarBrand>
           <NavbarToggler onClick={toggle} />
