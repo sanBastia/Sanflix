@@ -12,9 +12,9 @@ class Alert extends React.Component {
   static propTypes = {
     RequestBonusBalance: PropTypes.func.isRequired,
     balanceReducer: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
-    purchase: PropTypes.bool.isRequired,
+    title: PropTypes.string,
+    price: PropTypes.string,
+    purchase: PropTypes.bool,
     RequestPurchase: PropTypes.func.isRequired,
 
   }
@@ -22,6 +22,7 @@ class Alert extends React.Component {
   state = {
     show: false,
     purchase: false,
+    finish: false,
   }
 
   componentDidMount() {
@@ -38,14 +39,14 @@ class Alert extends React.Component {
 
   componentDidUpdate(prevProps) {
     const { purchase } = this.props;
-    const { handleOpen } = this;
+    const { handleOpenPurchaseConfirmation } = this;
     if (prevProps.purchase !== purchase) {
-      return handleOpen();
+      return handleOpenPurchaseConfirmation();
     }
     return null;
   }
 
-  handleOpen = () => {
+  handleOpenPurchaseConfirmation = () => {
     this.setState({
       show: true,
       purchase: true,
@@ -66,13 +67,28 @@ class Alert extends React.Component {
     RequestPurchase(result);
     this.setState({
       show: false,
+      purchase: false,
+    });
+
+    setTimeout(() => {
+      this.setState({
+        show: true,
+        finish: true,
+      });
+    }, 1000);
+  }
+
+  handleAfterPurchasing = () => {
+    this.setState({
+      show: false,
+      finish: false,
     });
   }
 
   handleRenderAlertType = () => {
-    const { purchase, show } = this.state;
-    const { title, price } = this.props;
-    const { handlePurchasing, handleBonusBalance } = this;
+    const { purchase, show, finish } = this.state;
+    const { title, price, balanceReducer: { balance } } = this.props;
+    const { handlePurchasing, handleBonusBalance, handleAfterPurchasing } = this;
     const result = `${title} - ${price}`;
     if (purchase) {
       return (
@@ -81,6 +97,18 @@ class Alert extends React.Component {
           title="Purchase Confirmation"
           text={result}
           onConfirm={() => handlePurchasing()}
+        />
+      );
+    }
+
+    if (finish) {
+      return (
+        <SweetAlert
+          show={show}
+          type="success"
+          title="CONGRATULATIONS !"
+          text={`You just succesfully purchase ${title} !, your current balance is RP. ${balance}`}
+          onConfirm={() => handleAfterPurchasing()}
         />
       );
     }
@@ -100,6 +128,12 @@ class Alert extends React.Component {
     return handleRenderAlertType();
   }
 }
+
+Alert.defaultProps = {
+  title: '',
+  price: '',
+  purchase: false,
+};
 
 const mapStateToProps = ({ balanceReducer }) => ({
   balanceReducer,
