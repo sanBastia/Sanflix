@@ -12,10 +12,10 @@ const errorRequestNowPlaying = err => ({
   payload: err,
 });
 
-const requestNowPlaying = () => async (dispatch) => {
+const requestNowPlaying = (query) => async (dispatch) => {
   dispatch({ type: CONSTANT.REQUEST_NOW_PLAYING });
 
-  const response = await call.getNowPlaying();
+  const response = await call.getNowPlaying(query);
 
   return SuccessOrError(response.status) ? dispatch(successRequestNowPlaying(response)) : dispatch(errorRequestNowPlaying(response));
 };

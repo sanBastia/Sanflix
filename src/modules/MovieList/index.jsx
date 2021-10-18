@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
-  TabContent, TabPane, Nav, NavItem, NavLink, Card, Button,
-  CardTitle, CardText, Row, Col, CardImg, CardBody, Badge,
-  CardSubtitle, Jumbotron, Container,
+   Card, Button,
+  CardTitle,  Row, Col, CardImg, CardBody,
+  Container,
+  Form, FormGroup, Label, Input,
+  Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap';
-import classnames from 'classnames';
 import requestNowPlaying from './action';
 import './style.css';
 
@@ -24,18 +25,17 @@ class MovieList extends React.Component {
   }
 
   state = {
-    activeTab: '1',
-  }
-
-  componentDidMount = () => {
-    const { requestNowPlaying } = this.props;
-    requestNowPlaying();
+    query: '',
+    modal: false,
+    item: {}
   }
 
   setDataFromStorage = () => {
-    const { nowPlayingReducer: { data: { results } } } = this.props;
+    const { nowPlayingReducer: { data: { Search } } } = this.props;
+
+    console.log( this.props.nowPlayingReducer, 'nowplaying')
     const storage = window.localStorage;
-    storage.setItem('result', JSON.stringify(results));
+    storage.setItem('result', JSON.stringify(Search));
   }
 
   getDataFromStorage = () => {
@@ -49,68 +49,66 @@ class MovieList extends React.Component {
 
   waitingFromStorage = data => data !== 'undefined'
 
-  toggle = (tab) => {
-    const { activeTab } = this.state;
-    if (activeTab !== tab) {
-      this.setState({
-        activeTab: tab,
-      });
-    }
-  }
+  
+  setQuery = (e) => this.setState({query: e.target.value})
+  setModal = (item) => this.setState((prevState) => ({modal: !prevState.modal, item: item}))
 
-  handleOverview = overview => (
-    overview === 'Add the plot.' ? (
-      <Badge color="info">
-              Coming soon
-      </Badge>
-    ) : overview
-  )
 
-  handleLinkToMovieDetail = (movie) => {
-    const { id, title } = movie;
-    const tempTitle = title.split(' ').length;
-    if (tempTitle > 1) {
-      const res = `${id}-${title.split(' ').join('-')}`;
-      return res;
-    }
-    return `${id}-${title}`;
-  }
+
+  handleRenderModal = () => {
+
+    const { modal, item } = this.state;
+    const { setModal } = this;
+    return (
+      <Modal isOpen={modal} toggle={setModal}>
+        <ModalHeader toggle={setModal} charCode="X">{item.Title}</ModalHeader>
+        <ModalBody>
+          <img src={item.Poster} alt="item-poster"/>
+        </ModalBody>
+        <ModalFooter>
+        <Button color="success">
+                    <Link to={`/${item.Title}`}>
+                       Take a look !
+                    </Link>
+                  </Button> 
+        </ModalFooter>
+    </Modal>
+    )
+}
 
   renderNowPlaying = () => {
     const { nowPlayingReducer: { activeRequests } } = this.props;
 
     const {
       setDataFromStorage, getDataFromStorage,
-      handleOverview, handleLinkToMovieDetail,
+      handleRenderModal,
+      setModal,
+      handleScroll
     } = this;
 
     setDataFromStorage();
+    
     const storageResults = getDataFromStorage();
 
     if (storageResults && activeRequests === 0) {
       return (
         <Row>
           {storageResults.map(item => (
-            <Col key={item.id} md="3">
+            <Col key={item.imdbID} md="3">
               <Card className="nowPlayingCard">
-                <CardImg top width="100%" src={`https://image.tmdb.org/t/p/w500/${item.poster_path}`} alt="Card image cap" />
+                <CardImg top width="100%" src={item.Poster} alt="Card image cap" onClick={() => setModal(item)} />
                 <CardBody>
                   <CardTitle>
-                    {item.title}
+                    {item.Title}
                   </CardTitle>
-                  <CardSubtitle>
-                      Synopsis
-                  </CardSubtitle>
-                  <CardText>
-                    { handleOverview(item.overview) }
-                  </CardText>
                   <Button color="success">
-                    <Link to={handleLinkToMovieDetail(item)}>
+                    <Link to={`/${item.Title}`}>
                        Take a look !
                     </Link>
-                  </Button>
+                  </Button> 
                 </CardBody>
               </Card>
+              {handleRenderModal()}
             </Col>
           ))}
 
@@ -121,47 +119,38 @@ class MovieList extends React.Component {
     return <LoadingBar progress={activeRequests} />;
   }
 
+
+
   render() {
-    const { activeTab } = this.state;
-    const { toggle, renderNowPlaying } = this;
+
+    const { renderNowPlaying, setQuery,} = this;
+    const { query } = this.state;
+    const { requestNowPlaying } = this.props;
+   
+   
     return (
-      <div>
-        <Nav tabs>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: activeTab === '1' })}
-              onClick={() => { toggle('1'); }}
-            >
-              Now Playing
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              className={classnames({ active: activeTab === '2' })}
-              onClick={() => { toggle('2'); }}
-            >
-              Coming soon
-            </NavLink>
-          </NavItem>
-        </Nav>
-        <TabContent activeTab={activeTab}>
-          <TabPane tabId="1" className="nowPlayingTab">
-            {renderNowPlaying()}
-          </TabPane>
-          <TabPane tabId="2">
-            <Jumbotron fluid>
-              <Container fluid>
-                <h1 className="display-3">
-            Coming Soon !
-                </h1>
-                <p className="lead">
-              Dont worry, our Engineer now is workin on that !
-                </p>
-              </Container>
-            </Jumbotron>
-          </TabPane>
-        </TabContent>
-      </div>
+      <Container>
+         <Row>
+            <Col>
+                 <Form>
+                  <Row form>
+                    <Col md={12}>
+                        <Input type="email" name="email" id="exampleEmail" placeholder="Search any movie with Title" onChange={(e) => setQuery(e)} />
+                    </Col>
+                   <Col className="btnWrapper">      
+                        <Button onClick={() => requestNowPlaying(query)}>Button</Button>   
+                   </Col>
+                  </Row>
+                  </Form>
+          </Col>
+      </Row>
+                <Row>
+                      <Col>
+                        {renderNowPlaying()}
+                      </Col>
+                </Row>
+            </Container>
+
     );
   }
 }

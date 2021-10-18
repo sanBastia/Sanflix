@@ -10,3 +10,16 @@
   color: white;
   text-decoration: none;
 }
+
+img {
+  width: 100%;
+}
+
+.container {
+  padding: 10px;
+}
+
+.btnWrapper{
+  text-align: center;
+  margin: 10px;
+}
