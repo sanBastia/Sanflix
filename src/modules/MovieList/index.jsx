@@ -8,12 +8,14 @@ import {
   CardTitle,  Row, Col, CardImg, CardBody,
   Container,
   Form, FormGroup, Label, Input,
-  Modal, ModalHeader, ModalBody, ModalFooter
+  Modal, ModalHeader, ModalBody, ModalFooter, Alert
 } from 'reactstrap';
 import requestNowPlaying from './action';
+import tempMovieImg from "../../common/Images/Movie.jpg";
 import './style.css';
 
 import LoadingBar from '../LoadingBar';
+import { checkNA } from './util';
 
 
 // eslint-disable-next-line
@@ -70,7 +72,7 @@ class MovieList extends React.Component {
     const temp = storage.getItem('result');
     if (waitingFromStorage(temp)) {
       return JSON.parse(temp);
-    }
+    } 
   }
 
   waitingFromStorage = data => data !== 'undefined'
@@ -89,7 +91,7 @@ class MovieList extends React.Component {
       <Modal isOpen={modal} toggle={setModal}>
         <ModalHeader toggle={setModal} charCode="X">{item.Title}</ModalHeader>
         <ModalBody>
-          <img src={item.Poster} alt="item-poster"/>
+          <img src={checkNA(item.Poster,tempMovieImg)} alt="item-poster"/>
         </ModalBody>
         <ModalFooter>
         <Button color="success">
@@ -103,8 +105,8 @@ class MovieList extends React.Component {
 }
 
   renderNowPlaying = () => {
-    const { nowPlayingReducer: { activeRequests } } = this.props;
-
+    const { nowPlayingReducer: { activeRequests, data } } = this.props;
+    const { page } = this.state;
     const {
       setDataFromStorage, getDataFromStorage,
       handleRenderModal,
@@ -115,14 +117,13 @@ class MovieList extends React.Component {
     setDataFromStorage();
     
     const storageResults = getDataFromStorage();
-
     if (storageResults && activeRequests === 0) {
       return (
         <Row>
           {storageResults.map(item => (
             <Col key={item.imdbID} md="3">
               <Card className="nowPlayingCard">
-                <CardImg top width="100%" src={item.Poster} alt="Card image cap" onClick={() => setModal(item)} />
+                <CardImg top width="100%" src={checkNA(item.Poster, tempMovieImg)} alt="template-movie-img" onClick={() => setModal(item)} />
                 <CardBody>
                   <CardTitle>
                     {item.Title}
@@ -140,7 +141,12 @@ class MovieList extends React.Component {
 
         </Row>
       );
-    }
+    } if(storageResults === undefined && data.Error === "Movie not found!") {
+      return(
+        <Alert color="danger">
+        There is no movie any more, please type another one
+      </Alert>
+      )}
 
     return <LoadingBar progress={activeRequests} />;
   }
@@ -152,16 +158,6 @@ class MovieList extends React.Component {
     const { renderNowPlaying, setQuery,} = this;
     const { query, page } = this.state;
     const { requestNowPlaying } = this.props;
-   
-    // Additional css
-    const loadingCSS = {
-      height: "100px",
-      margin: "30px"
-    };
-
-    // To change the loading icon behavior
-    const loadingTextCSS = { display: this.state.loading ? "block" : "none" };
-
     return (
       <Container>
          <Row>
@@ -169,10 +165,10 @@ class MovieList extends React.Component {
                  <Form>
                   <Row form>
                     <Col md={12}>
-                        <Input type="email" name="email" id="exampleEmail" placeholder="Search any movie with Title" onChange={(e) => setQuery(e)} />
+                        <Input type="text" name="text" id="text" placeholder="Search any movie with Title" onChange={(e) => setQuery(e)} />
                     </Col>
                    <Col className="btnWrapper">      
-                        <Button onClick={() => requestNowPlaying(query,page)}>Button</Button>   
+                        <Button onClick={() => requestNowPlaying(query,page)}>Search</Button>   
                    </Col>
                   </Row>
                   </Form>
@@ -185,9 +181,7 @@ class MovieList extends React.Component {
                 </Row>
                 <div
                     ref={loadingRef => (this.loadingRef = loadingRef)}
-                    style={loadingCSS}
                   >
-                    <span style={loadingTextCSS}>Loading...</span>
                   </div>
             </Container>
 

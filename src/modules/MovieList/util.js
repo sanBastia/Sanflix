@@ -7,7 +7,10 @@ const PickOnlyDataAndStatus = (payload) => {
   // return the data and status
   return ({ data, status });
 };
+
+const checkNA = (data, templatedata) => data === 'N/A' ? templatedata : data;
 export {
   SuccessOrError,
   PickOnlyDataAndStatus,
+  checkNA
 };

@@ -12,7 +12,8 @@ import { TiStarFullOutline } from 'react-icons/lib/ti';
 import './style.css';
 import { requestMovieDetail } from './action';
 import LoadingBar from '../LoadingBar';
-import { GetRatings } from './util';
+import tempMovieImg from '../../common/Images/Movie.jpg'
+import { checkNA } from './util';
 
 
 class MovieDetail extends Component {
@@ -97,13 +98,13 @@ class MovieDetail extends Component {
                 <Row>
                   <Col className="miniInfo">
                   <h1>Synopsis</h1>
-                   {data.Plot}
+                   {checkNA(data.Plot,"there is no Synopsis on this movie")}
                   </Col>
                 </Row>
               </Col>
               <Col sm="6">
                 <Card>
-                  <CardImg top width='auto' src={data.Poster} alt='data-poster' />
+                  <CardImg top width='auto' src={checkNA(data.Poster,tempMovieImg)} alt='data-poster' />
                 </Card>
               </Col>
             </Row>

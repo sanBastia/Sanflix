@@ -10,12 +10,11 @@ const PickOnlyDataAndStatus = (payload) => {
   return ({ data, status });
 };
 
-
-const GetRatings = async (data) => await data.Ratings;
+const checkNA = (data, templatedata) => data === 'N/A' ? templatedata : data;
 
 
 export {
   SuccessOrError,
   PickOnlyDataAndStatus,
-  GetRatings,
+  checkNA,
 };
