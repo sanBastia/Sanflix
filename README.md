@@ -5,10 +5,10 @@
 
 ## installment
  
- 1.Git Clone the project
- 2. open terminal go to the directory you just clone 
- 3. type NPM INSTALL
- 4. NPM START
+ 1. Git Clone the project \
+ 2. open terminal go to the directory you just clone \
+ 3. type NPM INSTALL \
+ 4. NPM START\
 
 ## Authors
 
