@@ -3,9 +3,12 @@
 [sanflix](https://sanbastia-sanflix.herokuapp.com/) is a simple Movie Catalogue APP, currently building it with React JS.
 
 
-## Deployment
+## installment
  
- I'm using the HEROKU to deploy this app. the instruction list will be coming soon...
+ 1.Git Clone the project
+ 2. open terminal go to the directory you just clone 
+ 3. type NPM INSTALL
+ 4. NPM START
 
 ## Authors
 
