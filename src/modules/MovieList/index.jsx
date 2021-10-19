@@ -7,7 +7,7 @@ import {
    Card, Button,
   CardTitle,  Row, Col, CardImg, CardBody,
   Container,
-  Form, FormGroup, Label, Input,
+  Form, Input,
   Modal, ModalHeader, ModalBody, ModalFooter, Alert
 } from 'reactstrap';
 import requestNowPlaying from './action';
@@ -106,12 +106,10 @@ class MovieList extends React.Component {
 
   renderNowPlaying = () => {
     const { nowPlayingReducer: { activeRequests, data } } = this.props;
-    const { page } = this.state;
     const {
       setDataFromStorage, getDataFromStorage,
       handleRenderModal,
       setModal,
-      handleScroll
     } = this;
 
     setDataFromStorage();
@@ -120,8 +118,8 @@ class MovieList extends React.Component {
     if (storageResults && activeRequests === 0) {
       return (
         <Row>
-          {storageResults.map(item => (
-            <Col key={item.imdbID} md="3">
+          {storageResults.map((item,index) => (
+            <Col key={index} md="3">
               <Card className="nowPlayingCard">
                 <CardImg top width="100%" src={checkNA(item.Poster, tempMovieImg)} alt="template-movie-img" onClick={() => setModal(item)} />
                 <CardBody>
@@ -141,17 +139,15 @@ class MovieList extends React.Component {
 
         </Row>
       );
-    } if(storageResults === undefined && data.Error === "Movie not found!") {
+    } if(storageResults === undefined && data.Response === 'False' ) {
       return(
         <Alert color="danger">
-        There is no movie any more, please type another one
+        {data.Error}
       </Alert>
       )}
 
     return <LoadingBar progress={activeRequests} />;
   }
-
-
 
   render() {
 

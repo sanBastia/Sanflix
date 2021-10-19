@@ -1,5 +1,3 @@
-import { Badge } from 'reactstrap';
-
 const SuccessOrError = status => status === 'success';
 
 const PickOnlyDataAndStatus = (payload) => {

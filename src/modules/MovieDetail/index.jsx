@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
-  Jumbotron, Badge, Row, Col, Card, CardImg, CardBody,
-  CardTitle, CardSubtitle, Button, Container,
+  Jumbotron, Row, Col, Card, CardImg,Container,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FaTag, FaMoney } from 'react-icons/lib/fa/';
 import { TiStarFullOutline } from 'react-icons/lib/ti';
 
 import './style.css';
@@ -47,10 +45,7 @@ class MovieDetail extends Component {
   }
 
   render() {
-   
     const { movieDetailReducer: { data, activeRequests, status } } = this.props;
-    const { renderRating } = this;
-
     if (status === 'error') {
       return (
         <Jumbotron fluid>
