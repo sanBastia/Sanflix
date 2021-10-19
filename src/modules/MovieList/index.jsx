@@ -27,13 +27,39 @@ class MovieList extends React.Component {
   state = {
     query: '',
     modal: false,
-    item: {}
+    item: {},
+    loading: false,
+    page: 1,
+    prevY: 0
+  }
+  componentDidMount(){
+    var options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0
+    };
+    
+    this.observer = new IntersectionObserver(
+      this.handleObserver.bind(this),
+      options
+    );
+    this.observer.observe(this.loadingRef);
+  }
+
+  handleObserver = (entities, observer) => {
+    const y = entities[0].boundingClientRect.y;
+    const { prevY, page, query } = this.state
+    const { requestNowPlaying } = this.props;
+    if (prevY > y) {
+      const curPage = page + 1;
+      requestNowPlaying(query,curPage);
+      this.setState({ page: curPage });
+    }
+    this.setState({ prevY: y });
   }
 
   setDataFromStorage = () => {
     const { nowPlayingReducer: { data: { Search } } } = this.props;
-
-    console.log( this.props.nowPlayingReducer, 'nowplaying')
     const storage = window.localStorage;
     storage.setItem('result', JSON.stringify(Search));
   }
@@ -124,10 +150,18 @@ class MovieList extends React.Component {
   render() {
 
     const { renderNowPlaying, setQuery,} = this;
-    const { query } = this.state;
+    const { query, page } = this.state;
     const { requestNowPlaying } = this.props;
    
-   
+    // Additional css
+    const loadingCSS = {
+      height: "100px",
+      margin: "30px"
+    };
+
+    // To change the loading icon behavior
+    const loadingTextCSS = { display: this.state.loading ? "block" : "none" };
+
     return (
       <Container>
          <Row>
@@ -138,7 +172,7 @@ class MovieList extends React.Component {
                         <Input type="email" name="email" id="exampleEmail" placeholder="Search any movie with Title" onChange={(e) => setQuery(e)} />
                     </Col>
                    <Col className="btnWrapper">      
-                        <Button onClick={() => requestNowPlaying(query)}>Button</Button>   
+                        <Button onClick={() => requestNowPlaying(query,page)}>Button</Button>   
                    </Col>
                   </Row>
                   </Form>
@@ -149,6 +183,12 @@ class MovieList extends React.Component {
                         {renderNowPlaying()}
                       </Col>
                 </Row>
+                <div
+                    ref={loadingRef => (this.loadingRef = loadingRef)}
+                    style={loadingCSS}
+                  >
+                    <span style={loadingTextCSS}>Loading...</span>
+                  </div>
             </Container>
 
     );
