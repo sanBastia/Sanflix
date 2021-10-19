@@ -1,9 +1,8 @@
-# sanflix
+# Sanflix
 
-[sanflix](https://sanbastia-sanflix.herokuapp.com/) is a simple Movie Catalogue APP, currently building it with React JS.
+sanflix is a simple Movie Catalogue APP, currently building it with React JS.
 
-
-## installment
+## Installment
  
  1. Git Clone the project 
  2. open terminal go to the directory you just clone 
